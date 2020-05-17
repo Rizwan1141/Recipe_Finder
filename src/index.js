@@ -1,17 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDom from 'react-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import App from './components/App'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import rootReducer from './reducers'
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import FavoriteRecipeList from './components/FavoriteRecipeList'
+
+const store = createStore(rootReducer)
+store.subscribe(() => console.log('store', store.getState()))
+
+//both paths start with forward slash, so App component will fetch all paths that begin with forward slash
+// we can make this path exact to use only single forward slash to hit App Component, here we will specify "exact"
+
+ReactDom.render(
+    <Provider store = {store}>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path='/' component={App}/>
+                <Route path='/favorites' component={FavoriteRecipeList}/>
+            </Switch>
+        </BrowserRouter>
+    </Provider>
+    , document.getElementById('root')
+)
